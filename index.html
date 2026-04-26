@@ -1,560 +1,111 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RED8</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --red:#E24B4A;--red-dark:#A32D2D;--red-light:#F7C1C1;
-    --bg:#0D0D0D;--surface:#161616;--card:#1E1E1E;--card2:#252525;
-    --border:#2A2A2A;--text:#F0EDE8;--muted:#888780;--accent:#E24B4A;
-  }
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-  
-  /* TOP BAR */
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
-  .logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--red);cursor:pointer}
-  .logo span{color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;display:block;letter-spacing:1px;margin-top:-6px;font-weight:300}
-  .date-chip{font-size:12px;color:var(--muted);background:var(--card);padding:6px 14px;border-radius:20px;border:1px solid var(--border)}
-  
-  /* NAV TABS */
-  .nav{display:flex;gap:6px;padding:16px 28px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
-  .nav::-webkit-scrollbar{display:none}
-  .tab{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);white-space:nowrap;transition:all 0.2s}
-  .tab:hover{color:var(--text);border-color:#444}
-  .tab.active{background:var(--red);color:#fff;border-color:var(--red)}
-  
-  /* MAIN */
-  .main{padding:24px 28px;max-width:1200px;margin:0 auto}
-  
-  /* SECTION */
-  .section{display:none}
-  .section.active{display:block}
-  
-  /* SECTION HEADER */
-  .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-  .sec-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--text)}
-  .sec-title span{color:var(--red)}
-  .add-btn{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-  
-  /* STAT GRID */
-  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
-  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-  .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-  .stat-val{font-size:24px;font-weight:600;color:var(--text)}
-  .stat-val.red{color:var(--red)}
-  .stat-val.green{color:#639922}
-  .stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
-  
-  /* PROGRESS BAR */
-  .prog-wrap{margin-bottom:20px}
-  .prog-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
-  .prog-label span:last-child{color:var(--muted)}
-  .prog-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
-  .prog-fill{height:100%;border-radius:4px;background:var(--red);transition:width 0.5s}
-  .prog-fill.green{background:#639922}
-  .prog-fill.amber{background:#EF9F27}
-  
-  /* LIST ITEMS */
-  .list-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
-  .list-item{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px}
-  .list-item:last-child{border-bottom:none}
-  .item-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-  .item-icon.red{background:#501313}
-  .item-icon.green{background:#173404}
-  .item-icon.amber{background:#412402}
-  .item-icon.blue{background:#042C53}
-  .item-icon.purple{background:#26215C}
-  .item-info{flex:1}
-  .item-name{font-size:14px;font-weight:500}
-  .item-sub{font-size:12px;color:var(--muted);margin-top:2px}
-  .item-amount{font-size:15px;font-weight:600;color:var(--text)}
-  .item-amount.red{color:var(--red)}
-  .item-amount.green{color:#639922}
-  
-  /* GRID 2 COL */
-  .col2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:600px){.col2{grid-template-columns:1fr}}
-  
-  /* BLOCK CARD */
-  .block{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
-  .block-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
-  
-  /* MILESTONE */
-  .milestone{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-  .milestone:last-child{border-bottom:none}
-  .ms-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex-shrink:0}
-  .ms-dot.done{background:#639922}
-  .ms-dot.current{background:var(--red)}
-  .ms-dot.upcoming{background:var(--border)}
-  .ms-title{font-size:14px;font-weight:500}
-  .ms-age{font-size:12px;color:var(--muted);margin-top:2px}
-  .ms-badge{font-size:11px;padding:3px 8px;border-radius:10px;margin-top:4px;display:inline-block}
-  .ms-badge.done{background:#173404;color:#C0DD97}
-  .ms-badge.current{background:#501313;color:#F0997B}
-  .ms-badge.upcoming{background:var(--card2);color:var(--muted)}
-  
-  /* DIET ITEM */
-  .diet-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-  .diet-row:last-child{border-bottom:none}
-  .diet-check{width:20px;height:20px;border-radius:4px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-  .diet-check.checked{background:#639922;border-color:#639922}
-  .diet-info{flex:1;font-size:14px}
-  .diet-cal{font-size:12px;color:var(--muted)}
-  
-  /* WEEKEND CARD */
-  .weekend-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .wcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-  .wcard:hover{border-color:var(--red);transform:translateY(-2px)}
-  .wcard.selected{border-color:var(--red);background:#1a0d0d}
-  .wcard-emoji{font-size:28px;margin-bottom:10px}
-  .wcard-name{font-size:16px;font-weight:600;margin-bottom:4px}
-  .wcard-desc{font-size:12px;color:var(--muted);line-height:1.5}
-  .wcard-cost{font-size:13px;font-weight:600;color:var(--red);margin-top:10px}
-  .selected-badge{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:10px;padding:3px 8px;border-radius:10px;font-weight:600}
-  
-  /* CRAVING SECTION */
-  .craving-box{background:linear-gradient(135deg,#1a0d0d,#1E1E1E);border:1px solid #3d1515;border-radius:14px;padding:20px;margin-top:16px}
-  .craving-title{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red);letter-spacing:2px;margin-bottom:12px}
-  .craving-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{padding:8px 16px;border-radius:20px;font-size:13px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;background:var(--card)}
-  .chip:hover{border-color:var(--red)}
-  .chip.active{background:var(--red);border-color:var(--red);color:#fff}
-  
-  /* ADD FORM */
-  .add-form{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;display:none}
-  .add-form.open{display:block}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-  .form-input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;width:100%}
-  .form-input:focus{outline:none;border-color:var(--red)}
-  .form-actions{display:flex;gap:8px;margin-top:10px}
-  .btn-save{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-  .btn-cancel{background:transparent;color:var(--muted);border:1px solid var(--border);padding:9px 20px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
-  
-  /* OVERVIEW HERO */
-  .hero-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;display:flex;align-items:center;gap:20px}
-  .hero-ring{width:70px;height:70px;border-radius:50%;border:4px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
-  .hero-pct{font-size:15px;font-weight:700;color:var(--text)}
-  .hero-text h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px}
-  .hero-text p{font-size:13px;color:var(--muted);margin-top:4px}
-  
-  svg.ring{position:absolute;top:-4px;left:-4px;width:78px;height:78px;transform:rotate(-90deg)}
+body{font-family:'DM Sans',sans-serif;background:#0D0D0D;color:#F0EDE8}
+.list-item{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #2A2A2A}
+.delete-btn{cursor:pointer;margin-left:10px;opacity:.6}
+.delete-btn:hover{opacity:1}
+.add-form{display:none}
+.add-form.open{display:block}
 </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <div class="logo">RED8<span>Family Budget System</span></div>
-  <div class="date-chip" id="dateChip"></div>
+<h2>RED8 - Newborn Tracker</h2>
+
+<button onclick="toggleForm()">+ Add Item</button>
+
+<div class="add-form" id="form">
+  <input id="name" placeholder="Item name">
+  <input id="amount" type="number" placeholder="Amount">
+  <input id="category" placeholder="Category">
+  <button onclick="addItem()">Save</button>
 </div>
 
-<div class="nav" id="navBar">
-  <div class="tab active" onclick="switchTab('overview')">Overview</div>
-  <div class="tab" onclick="switchTab('newborn')">Newborn & Kids</div>
-  <div class="tab" onclick="switchTab('family')">Family Budget</div>
-  <div class="tab" onclick="switchTab('health')">Health & Diet</div>
-  <div class="tab" onclick="switchTab('learning')">Learning</div>
-  <div class="tab" onclick="switchTab('weekend')">Weekend Plans</div>
-</div>
-
-<div class="main">
-
-  <!-- OVERVIEW -->
-  <div class="section active" id="sec-overview">
-    <div class="sec-header">
-      <div class="sec-title"><span>RED8</span> — This Month</div>
-    </div>
-    <div class="hero-bar">
-      <div class="hero-ring">
-        <svg class="ring" viewBox="0 0 78 78">
-          <circle cx="39" cy="39" r="33" fill="none" stroke="#2A2A2A" stroke-width="5"/>
-          <circle cx="39" cy="39" r="33" fill="none" stroke="#E24B4A" stroke-width="5" stroke-dasharray="207.3" stroke-dashoffset="83" stroke-linecap="round"/>
-        </svg>
-        <div class="hero-pct">60%</div>
-      </div>
-      <div class="hero-text">
-        <h2>Budget Used — April</h2>
-        <p>$2,406 spent of $4,000 monthly budget. $1,594 remaining.</p>
-      </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Newborn & Kids</div><div class="stat-val red">$642</div><div class="stat-sub">of $800 budget</div></div>
-      <div class="stat-card"><div class="stat-label">Family Bills</div><div class="stat-val red">$1,240</div><div class="stat-sub">of $1,800 budget</div></div>
-      <div class="stat-card"><div class="stat-label">Health & Food</div><div class="stat-val">$324</div><div class="stat-sub">of $500 budget</div></div>
-      <div class="stat-card"><div class="stat-label">Learning</div><div class="stat-val green">$80</div><div class="stat-sub">of $200 budget</div></div>
-      <div class="stat-card"><div class="stat-label">Weekend Fun</div><div class="stat-val">$120</div><div class="stat-sub">of $300 budget</div></div>
-      <div class="stat-card"><div class="stat-label">Savings Left</div><div class="stat-val green">$1,594</div><div class="stat-sub">on track</div></div>
-    </div>
-    <div class="col2">
-      <div class="block">
-        <div class="block-title">Budget Progress</div>
-        <div class="prog-wrap"><div class="prog-label"><span>Newborn & Kids</span><span>$642 / $800</span></div><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div></div>
-        <div class="prog-wrap"><div class="prog-label"><span>Family Bills</span><span>$1,240 / $1,800</span></div><div class="prog-bar"><div class="prog-fill amber" style="width:69%"></div></div></div>
-        <div class="prog-wrap"><div class="prog-label"><span>Health & Food</span><span>$324 / $500</span></div><div class="prog-bar"><div class="prog-fill green" style="width:65%"></div></div></div>
-        <div class="prog-wrap"><div class="prog-label"><span>Learning</span><span>$80 / $200</span></div><div class="prog-bar"><div class="prog-fill green" style="width:40%"></div></div></div>
-        <div class="prog-wrap"><div class="prog-label"><span>Weekend</span><span>$120 / $300</span></div><div class="prog-bar"><div class="prog-fill green" style="width:40%"></div></div></div>
-      </div>
-      <div class="block">
-        <div class="block-title">Recent Activity</div>
-        <div class="diet-row"><div class="item-icon green" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🛒</div><div class="diet-info">Diapers & Wipes<div class="diet-cal" style="color:var(--muted);font-size:11px">Newborn • Today</div></div><div style="font-size:13px;font-weight:600;color:var(--red)">-$48</div></div>
-        <div class="diet-row"><div class="item-icon amber" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">⚡</div><div class="diet-info">Electric Bill<div class="diet-cal" style="color:var(--muted);font-size:11px">Family • Apr 22</div></div><div style="font-size:13px;font-weight:600;color:var(--red)">-$124</div></div>
-        <div class="diet-row"><div class="item-icon green" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🥦</div><div class="diet-info">Weekly Groceries<div class="diet-cal" style="color:var(--muted);font-size:11px">Health • Apr 21</div></div><div style="font-size:13px;font-weight:600;color:var(--red)">-$89</div></div>
-        <div class="diet-row"><div class="item-icon purple" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">📚</div><div class="diet-info">ABC Learning App<div class="diet-cal" style="color:var(--muted);font-size:11px">Learning • Apr 20</div></div><div style="font-size:13px;font-weight:600;color:var(--red)">-$8</div></div>
-        <div class="diet-row"><div class="item-icon red" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">💰</div><div class="diet-info">Paycheck<div class="diet-cal" style="color:var(--muted);font-size:11px">Income • Apr 15</div></div><div style="font-size:13px;font-weight:600;color:#639922">+$2,800</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NEWBORN & KIDS -->
-  <div class="section" id="sec-newborn">
-    <div class="sec-header">
-      <div class="sec-title">Newborn <span>&</span> Kids</div>
-      <button class="add-btn" onclick="toggleForm('newborn-form')">+ Add Item</button>
-    </div>
-    <div class="add-form" id="newborn-form">
-      <div class="form-row">
-        <input class="form-input" placeholder="Item name (e.g. Diapers)" id="nb-name">
-        <input class="form-input" placeholder="Amount ($)" id="nb-amount" type="number">
-      </div>
-      <div class="form-row">
-        <select class="form-input" id="nb-cat">
-          <option>Diapers & Wipes</option><option>Formula & Food</option><option>Clothing</option><option>Toys</option><option>Medicine</option><option>Gear</option>
-        </select>
-        <input class="form-input" placeholder="For (e.g. Baby, Emma)" id="nb-for">
-      </div>
-      <div class="form-actions">
-        <button class="btn-save" onclick="addNewbornItem()">Save Item</button>
-        <button class="btn-cancel" onclick="toggleForm('newborn-form')">Cancel</button>
-      </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-val red">$642</div></div>
-      <div class="stat-card"><div class="stat-label">Budget Left</div><div class="stat-val green">$158</div></div>
-      <div class="stat-card"><div class="stat-label">Items Tracked</div><div class="stat-val">12</div></div>
-      <div class="stat-card"><div class="stat-label">Top Spend</div><div class="stat-val" style="font-size:16px">Diapers</div></div>
-    </div>
-    <div class="list-card" id="newborn-list">
-      <div class="list-item"><div class="item-icon red">🍼</div><div class="item-info"><div class="item-name">Huggies Diapers (Size 1)</div><div class="item-sub">Diapers & Wipes • Baby</div></div><div class="item-amount red">-$48</div></div>
-      <div class="list-item"><div class="item-icon green">🥛</div><div class="item-info"><div class="item-name">Similac Formula</div><div class="item-sub">Formula & Food • Baby</div></div><div class="item-amount red">-$32</div></div>
-      <div class="list-item"><div class="item-icon amber">👕</div><div class="item-info"><div class="item-name">Carter's Onesies 6-pack</div><div class="item-sub">Clothing • Baby</div></div><div class="item-amount red">-$28</div></div>
-      <div class="list-item"><div class="item-icon blue">🧸</div><div class="item-info"><div class="item-name">Soft Plush Toy Set</div><div class="item-sub">Toys • Emma (age 4)</div></div><div class="item-amount red">-$22</div></div>
-      <div class="list-item"><div class="item-icon purple">💊</div><div class="item-info"><div class="item-name">Infant Tylenol</div><div class="item-sub">Medicine • Baby</div></div><div class="item-amount red">-$12</div></div>
-    </div>
-  </div>
-
-  <!-- FAMILY BUDGET -->
-  <div class="section" id="sec-family">
-    <div class="sec-header">
-      <div class="sec-title">Family <span>Budget</span></div>
-      <button class="add-btn" onclick="toggleForm('family-form')">+ Add Expense</button>
-    </div>
-    <div class="add-form" id="family-form">
-      <div class="form-row">
-        <input class="form-input" placeholder="Expense name" id="fam-name">
-        <input class="form-input" placeholder="Amount ($)" id="fam-amount" type="number">
-      </div>
-      <div class="form-row">
-        <select class="form-input" id="fam-cat">
-          <option>Housing</option><option>Utilities</option><option>Groceries</option><option>Transportation</option><option>Insurance</option><option>Subscriptions</option><option>Other</option>
-        </select>
-        <select class="form-input" id="fam-freq">
-          <option>Monthly</option><option>Weekly</option><option>One-time</option><option>Annual</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button class="btn-save" onclick="addFamilyItem()">Save</button>
-        <button class="btn-cancel" onclick="toggleForm('family-form')">Cancel</button>
-      </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Monthly Income</div><div class="stat-val green">$4,000</div></div>
-      <div class="stat-card"><div class="stat-label">Fixed Bills</div><div class="stat-val red">$1,240</div></div>
-      <div class="stat-card"><div class="stat-label">Savings Goal</div><div class="stat-val">$400</div></div>
-      <div class="stat-card"><div class="stat-label">Net Balance</div><div class="stat-val green">$1,594</div></div>
-    </div>
-    <div class="list-card" id="family-list">
-      <div class="list-item"><div class="item-icon red">🏠</div><div class="item-info"><div class="item-name">Rent / Mortgage</div><div class="item-sub">Housing • Monthly</div></div><div class="item-amount red">-$850</div></div>
-      <div class="list-item"><div class="item-icon amber">⚡</div><div class="item-info"><div class="item-name">Electric & Gas</div><div class="item-sub">Utilities • Monthly</div></div><div class="item-amount red">-$124</div></div>
-      <div class="list-item"><div class="item-icon blue">📱</div><div class="item-info"><div class="item-name">Phone Plan (x2)</div><div class="item-sub">Subscriptions • Monthly</div></div><div class="item-amount red">-$80</div></div>
-      <div class="list-item"><div class="item-icon green">🚗</div><div class="item-info"><div class="item-name">Car Insurance</div><div class="item-sub">Insurance • Monthly</div></div><div class="item-amount red">-$110</div></div>
-      <div class="list-item"><div class="item-icon purple">🌐</div><div class="item-info"><div class="item-name">Internet</div><div class="item-sub">Utilities • Monthly</div></div><div class="item-amount red">-$76</div></div>
-    </div>
-  </div>
-
-  <!-- HEALTH & DIET -->
-  <div class="section" id="sec-health">
-    <div class="sec-header">
-      <div class="sec-title">Health <span>&</span> Diet</div>
-      <button class="add-btn" onclick="toggleForm('health-form')">+ Add Food</button>
-    </div>
-    <div class="add-form" id="health-form">
-      <div class="form-row">
-        <input class="form-input" placeholder="Food item" id="h-name">
-        <input class="form-input" placeholder="Calories" id="h-cal" type="number">
-      </div>
-      <div class="form-row">
-        <select class="form-input" id="h-cat">
-          <option>Fruits & Veggies</option><option>Protein</option><option>Dairy</option><option>Grains</option><option>Snacks</option><option>Drinks</option>
-        </select>
-        <input class="form-input" placeholder="Cost ($)" id="h-cost" type="number" step="0.01">
-      </div>
-      <div class="form-actions">
-        <button class="btn-save" onclick="addHealthItem()">Save</button>
-        <button class="btn-cancel" onclick="toggleForm('health-form')">Cancel</button>
-      </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">This Week Spend</div><div class="stat-val">$89</div></div>
-      <div class="stat-card"><div class="stat-label">Calories Today</div><div class="stat-val">1,840</div><div class="stat-sub">goal: 2,200</div></div>
-      <div class="stat-card"><div class="stat-label">Healthy Items</div><div class="stat-val green">72%</div></div>
-      <div class="stat-card"><div class="stat-label">Monthly Food</div><div class="stat-val">$324</div></div>
-    </div>
-    <div class="col2">
-      <div class="block">
-        <div class="block-title">Today's Meals ✅</div>
-        <div id="diet-list">
-          <div class="diet-row"><div class="diet-check checked" onclick="toggleCheck(this)">✓</div><div class="diet-info">Oatmeal with berries<div class="diet-cal">Breakfast • 380 cal</div></div><div style="font-size:12px;color:var(--muted)">$2.40</div></div>
-          <div class="diet-row"><div class="diet-check checked" onclick="toggleCheck(this)">✓</div><div class="diet-info">Chicken salad wrap<div class="diet-cal">Lunch • 520 cal</div></div><div style="font-size:12px;color:var(--muted)">$6.50</div></div>
-          <div class="diet-row"><div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">Salmon & broccoli<div class="diet-cal">Dinner • 640 cal</div></div><div style="font-size:12px;color:var(--muted)">$12.00</div></div>
-          <div class="diet-row"><div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">Greek yogurt<div class="diet-cal">Snack • 150 cal</div></div><div style="font-size:12px;color:var(--muted)">$1.80</div></div>
-          <div class="diet-row"><div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">Apple & peanut butter<div class="diet-cal">Snack • 210 cal</div></div><div style="font-size:12px;color:var(--muted)">$1.20</div></div>
-        </div>
-      </div>
-      <div class="block">
-        <div class="block-title">Baby / Kids Nutrition</div>
-        <div class="diet-row"><div class="diet-check checked" onclick="toggleCheck(this)">✓</div><div class="diet-info">Baby formula (6 oz x4)<div class="diet-cal">Baby • Newborn</div></div><div style="font-size:12px;color:#639922">Healthy</div></div>
-        <div class="diet-row"><div class="diet-check checked" onclick="toggleCheck(this)">✓</div><div class="diet-info">Mashed sweet potato<div class="diet-cal">Emma • Age 4</div></div><div style="font-size:12px;color:#639922">Healthy</div></div>
-        <div class="diet-row"><div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">Whole milk + fruit cup<div class="diet-cal">Emma • Lunch</div></div><div style="font-size:12px;color:var(--muted)">Pending</div></div>
-        <div class="diet-row"><div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">Veggie puree (Stage 2)<div class="diet-cal">Baby • Dinner</div></div><div style="font-size:12px;color:var(--muted)">Pending</div></div>
-        <div style="margin-top:14px;padding:12px;background:var(--card2);border-radius:8px;">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Vitamin D drops — Baby daily</div>
-          <div style="font-size:13px;font-weight:500;color:#639922">✓ Given today</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LEARNING -->
-  <div class="section" id="sec-learning">
-    <div class="sec-header">
-      <div class="sec-title">Learning <span>Milestones</span></div>
-      <button class="add-btn" onclick="toggleForm('learn-form')">+ Log Milestone</button>
-    </div>
-    <div class="add-form" id="learn-form">
-      <div class="form-row">
-        <input class="form-input" placeholder="Milestone (e.g. Counts to 10)" id="ml-name">
-        <input class="form-input" placeholder="Child's name" id="ml-child">
-      </div>
-      <div class="form-row">
-        <select class="form-input" id="ml-area">
-          <option>Language</option><option>Math</option><option>Motor Skills</option><option>Social</option><option>Reading</option><option>Art</option>
-        </select>
-        <select class="form-input" id="ml-status">
-          <option>Just achieved!</option><option>Working on it</option><option>Coming up</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button class="btn-save" onclick="addMilestone()">Save</button>
-        <button class="btn-cancel" onclick="toggleForm('learn-form')">Cancel</button>
-      </div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card"><div class="stat-label">Milestones Hit</div><div class="stat-val green">8</div><div class="stat-sub">this month</div></div>
-      <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-val amber" style="color:#EF9F27">3</div></div>
-      <div class="stat-card"><div class="stat-label">Learning Budget</div><div class="stat-val">$80</div><div class="stat-sub">of $200</div></div>
-      <div class="stat-card"><div class="stat-label">Age Range</div><div class="stat-val" style="font-size:16px">3–5 yrs</div></div>
-    </div>
-    <div class="col2">
-      <div class="block">
-        <div class="block-title">Emma — Age 4</div>
-        <div id="milestone-list">
-          <div class="milestone"><div class="ms-dot done"></div><div><div class="ms-title">Knows alphabet A–Z</div><div class="ms-age">Language • Age 3–4</div><div class="ms-badge done">Achieved ✓</div></div></div>
-          <div class="milestone"><div class="ms-dot done"></div><div><div class="ms-title">Counts to 20</div><div class="ms-age">Math • Age 4</div><div class="ms-badge done">Achieved ✓</div></div></div>
-          <div class="milestone"><div class="ms-dot current"></div><div><div class="ms-title">Writing her name</div><div class="ms-age">Motor / Language • Age 4</div><div class="ms-badge current">In Progress</div></div></div>
-          <div class="milestone"><div class="ms-dot current"></div><div><div class="ms-title">Reading simple words</div><div class="ms-age">Reading • Age 4–5</div><div class="ms-badge current">In Progress</div></div></div>
-          <div class="milestone"><div class="ms-dot upcoming"></div><div><div class="ms-title">Adds single digits</div><div class="ms-age">Math • Age 5</div><div class="ms-badge upcoming">Coming up</div></div></div>
-        </div>
-      </div>
-      <div class="block">
-        <div class="block-title">What Emma Knows Now</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
-          <span style="background:#26215C;color:#AFA9EC;font-size:12px;padding:4px 10px;border-radius:10px">Colors</span>
-          <span style="background:#26215C;color:#AFA9EC;font-size:12px;padding:4px 10px;border-radius:10px">Shapes</span>
-          <span style="background:#173404;color:#97C459;font-size:12px;padding:4px 10px;border-radius:10px">ABC's</span>
-          <span style="background:#173404;color:#97C459;font-size:12px;padding:4px 10px;border-radius:10px">1–20</span>
-          <span style="background:#412402;color:#EF9F27;font-size:12px;padding:4px 10px;border-radius:10px">Her Name</span>
-          <span style="background:#173404;color:#97C459;font-size:12px;padding:4px 10px;border-radius:10px">Animals</span>
-          <span style="background:#173404;color:#97C459;font-size:12px;padding:4px 10px;border-radius:10px">Songs</span>
-          <span style="background:#26215C;color:#AFA9EC;font-size:12px;padding:4px 10px;border-radius:10px">Days of week</span>
-        </div>
-        <div class="block-title" style="margin-top:10px">Learning Apps & Cost</div>
-        <div class="diet-row"><div style="font-size:20px;margin-right:4px">📱</div><div class="diet-info">Khan Kids<div class="diet-cal">Free</div></div><div style="font-size:12px;color:#639922;font-weight:600">Free</div></div>
-        <div class="diet-row"><div style="font-size:20px;margin-right:4px">📖</div><div class="diet-info">Epic! Books<div class="diet-cal">Monthly</div></div><div style="font-size:12px;color:var(--red);font-weight:600">$8/mo</div></div>
-        <div class="diet-row"><div style="font-size:20px;margin-right:4px">🎮</div><div class="diet-info">ABCMouse<div class="diet-cal">Monthly</div></div><div style="font-size:12px;color:var(--red);font-weight:600">$10/mo</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WEEKEND -->
-  <div class="section" id="sec-weekend">
-    <div class="sec-header">
-      <div class="sec-title">Weekend <span>Plans</span></div>
-    </div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">Choose your Saturday or Sunday vibe — and log what your wife is craving 🌹</div>
-    <div class="weekend-grid">
-      <div class="wcard" id="wc-fun" onclick="selectWeekend('fun')">
-        <div class="wcard-emoji">🎡</div>
-        <div class="wcard-name">Family Fun Day</div>
-        <div class="wcard-desc">Park, playground, movies, or mini golf. Kids included, good vibes only.</div>
-        <div class="wcard-cost">Budget: $40–$80</div>
-      </div>
-      <div class="wcard" id="wc-date" onclick="selectWeekend('date')">
-        <div class="wcard-emoji">🌹</div>
-        <div class="wcard-name">Date Night</div>
-        <div class="wcard-desc">Just you two. Dinner out, a movie, a walk — romance first, baby home.</div>
-        <div class="wcard-cost">Budget: $60–$120</div>
-      </div>
-      <div class="wcard" id="wc-home" onclick="selectWeekend('home')">
-        <div class="wcard-emoji">🏠</div>
-        <div class="wcard-name">Home Chill</div>
-        <div class="wcard-desc">Movie night in, cook together, board games. Low cost, high quality time.</div>
-        <div class="wcard-cost">Budget: $15–$30</div>
-      </div>
-      <div class="wcard" id="wc-adventure" onclick="selectWeekend('adventure')">
-        <div class="wcard-emoji">🌳</div>
-        <div class="wcard-name">Outdoor Adventure</div>
-        <div class="wcard-desc">Hiking trail, nature walk, picnic at the park. Fresh air for the whole crew.</div>
-        <div class="wcard-cost">Budget: $20–$50</div>
-      </div>
-    </div>
-
-    <div class="craving-box">
-      <div class="craving-title">🌹 What's She Craving?</div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Tap what your wife is craving this weekend — plan dinner around it!</div>
-      <div class="craving-chips" id="craving-chips">
-        <div class="chip" onclick="toggleCraving(this)">🍕 Pizza</div>
-        <div class="chip" onclick="toggleCraving(this)">🍣 Sushi</div>
-        <div class="chip" onclick="toggleCraving(this)">🍔 Burgers</div>
-        <div class="chip" onclick="toggleCraving(this)">🌮 Tacos</div>
-        <div class="chip" onclick="toggleCraving(this)">🍜 Ramen</div>
-        <div class="chip" onclick="toggleCraving(this)">🥗 Salad</div>
-        <div class="chip" onclick="toggleCraving(this)">🍝 Pasta</div>
-        <div class="chip" onclick="toggleCraving(this)">🍗 Chicken</div>
-        <div class="chip" onclick="toggleCraving(this)">🧁 Dessert Run</div>
-        <div class="chip" onclick="toggleCraving(this)">🥘 Soul Food</div>
-        <div class="chip" onclick="toggleCraving(this)">☕ Coffee Date</div>
-        <div class="chip" onclick="toggleCraving(this)">🍦 Ice Cream</div>
-      </div>
-      <div id="craving-note" style="margin-top:14px;display:none;padding:12px;background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.3);border-radius:8px;font-size:13px;color:var(--red)"></div>
-    </div>
-  </div>
-
-</div>
+<div id="list"></div>
 
 <script>
-const now = new Date();
-document.getElementById('dateChip').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
-
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  const tabs = ['overview','newborn','family','health','learning','weekend'];
-  const idx = tabs.indexOf(name);
-  document.querySelectorAll('.tab')[idx].classList.add('active');
-  document.getElementById('sec-'+name).classList.add('active');
+// ===== STORAGE =====
+function saveData(key,data){
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
-function toggleForm(id){
-  const f = document.getElementById(id);
-  f.classList.toggle('open');
+function loadData(key){
+  const d = localStorage.getItem(key);
+  return d ? JSON.parse(d) : [];
 }
 
-function toggleCheck(el){
-  el.classList.toggle('checked');
-  el.textContent = el.classList.contains('checked') ? '✓' : '';
+// ===== UI =====
+function toggleForm(){
+  document.getElementById('form').classList.toggle('open');
 }
 
-function addNewbornItem(){
-  const n=document.getElementById('nb-name').value;
-  const a=document.getElementById('nb-amount').value;
-  const c=document.getElementById('nb-cat').value;
-  const f=document.getElementById('nb-for').value;
-  if(!n||!a)return;
-  const list=document.getElementById('newborn-list');
-  const item=document.createElement('div');item.className='list-item';
-  item.innerHTML=`<div class="item-icon red">🛒</div><div class="item-info"><div class="item-name">${n}</div><div class="item-sub">${c} • ${f||'Family'}</div></div><div class="item-amount red">-$${parseFloat(a).toFixed(2)}</div>`;
-  list.appendChild(item);
-  document.getElementById('nb-name').value='';document.getElementById('nb-amount').value='';document.getElementById('nb-for').value='';
-  toggleForm('newborn-form');
+// ===== ADD =====
+function addItem(){
+  const name = document.getElementById('name').value;
+  const amount = document.getElementById('amount').value;
+  const category = document.getElementById('category').value;
+
+  if(!name || !amount) return;
+
+  const items = loadData('items');
+
+  items.push({
+    name,
+    amount: parseFloat(amount),
+    category
+  });
+
+  saveData('items', items);
+  render();
+
+  document.getElementById('name').value='';
+  document.getElementById('amount').value='';
+  document.getElementById('category').value='';
 }
 
-function addFamilyItem(){
-  const n=document.getElementById('fam-name').value;
-  const a=document.getElementById('fam-amount').value;
-  const c=document.getElementById('fam-cat').value;
-  const fr=document.getElementById('fam-freq').value;
-  if(!n||!a)return;
-  const list=document.getElementById('family-list');
-  const item=document.createElement('div');item.className='list-item';
-  item.innerHTML=`<div class="item-icon amber">💸</div><div class="item-info"><div class="item-name">${n}</div><div class="item-sub">${c} • ${fr}</div></div><div class="item-amount red">-$${parseFloat(a).toFixed(2)}</div>`;
-  list.appendChild(item);
-  document.getElementById('fam-name').value='';document.getElementById('fam-amount').value='';
-  toggleForm('family-form');
+// ===== DELETE =====
+function deleteItem(index){
+  const items = loadData('items');
+  items.splice(index,1);
+  saveData('items', items);
+  render();
 }
 
-function addHealthItem(){
-  const n=document.getElementById('h-name').value;
-  const cal=document.getElementById('h-cal').value;
-  const c=document.getElementById('h-cat').value;
-  const cost=document.getElementById('h-cost').value;
-  if(!n)return;
-  const list=document.getElementById('diet-list');
-  const row=document.createElement('div');row.className='diet-row';
-  row.innerHTML=`<div class="diet-check" onclick="toggleCheck(this)"></div><div class="diet-info">${n}<div class="diet-cal">${c} • ${cal||0} cal</div></div><div style="font-size:12px;color:var(--muted)">$${cost?parseFloat(cost).toFixed(2):'0.00'}</div>`;
-  list.appendChild(row);
-  document.getElementById('h-name').value='';document.getElementById('h-cal').value='';document.getElementById('h-cost').value='';
-  toggleForm('health-form');
+// ===== RENDER =====
+function render(){
+  const list = document.getElementById('list');
+  list.innerHTML='';
+
+  const items = loadData('items');
+
+  items.forEach((i,index)=>{
+    const el = document.createElement('div');
+    el.className='list-item';
+
+    el.innerHTML = `
+      <div>${i.name} (${i.category})</div>
+      <div>$${i.amount.toFixed(2)}</div>
+      <div class="delete-btn" onclick="deleteItem(${index})">🗑️</div>
+    `;
+
+    list.appendChild(el);
+  });
 }
 
-function addMilestone(){
-  const n=document.getElementById('ml-name').value;
-  const ch=document.getElementById('ml-child').value;
-  const a=document.getElementById('ml-area').value;
-  const s=document.getElementById('ml-status').value;
-  if(!n)return;
-  const statusMap={'Just achieved!':'done','Working on it':'current','Coming up':'upcoming'};
-  const st=statusMap[s];
-  const labelMap={'Just achieved!':'Achieved ✓','Working on it':'In Progress','Coming up':'Coming up'};
-  const list=document.getElementById('milestone-list');
-  const item=document.createElement('div');item.className='milestone';
-  item.innerHTML=`<div class="ms-dot ${st}"></div><div><div class="ms-title">${n}</div><div class="ms-age">${a} • ${ch||'Child'}</div><div class="ms-badge ${st}">${labelMap[s]}</div></div>`;
-  list.appendChild(item);
-  document.getElementById('ml-name').value='';document.getElementById('ml-child').value='';
-  toggleForm('learn-form');
-}
-
-function selectWeekend(type){
-  document.querySelectorAll('.wcard').forEach(c=>{c.classList.remove('selected');c.querySelector('.selected-badge')&&c.querySelector('.selected-badge').remove()});
-  const el=document.getElementById('wc-'+type);
-  el.classList.add('selected');
-  const badge=document.createElement('div');badge.className='selected-badge';badge.textContent='Selected';
-  el.appendChild(badge);
-}
-
-function toggleCraving(el){
-  el.classList.toggle('active');
-  const active=[...document.querySelectorAll('.chip.active')].map(c=>c.textContent);
-  const note=document.getElementById('craving-note');
-  if(active.length>0){
-    note.style.display='block';
-    note.textContent='She\'s craving: '+active.join(', ')+' — time to plan something special! 💕';
-  } else {
-    note.style.display='none';
-  }
-}
+// ===== LOAD =====
+window.onload = render;
 </script>
+
 </body>
 </html>
+```
